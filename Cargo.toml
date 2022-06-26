@@ -7,11 +7,12 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-plotters = {path = "../.."}
-cairo-rs = "^0.9"
-gtk = "^0.9"
-gio = "^0.9"
+cairo-rs = "0.15.11"
+gtk = "0.15.5"
+gio = "0.15.11"
+
+[dependencies.plotters]
+git = "https://github.com/plotters-rs/plotters"
 
 [dependencies.plotters-cairo]
 git = "https://github.com/plotters-rs/plotters-cairo"
-# version = "0.3.1"

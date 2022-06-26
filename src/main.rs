@@ -1,6 +1,3 @@
-use std::env::args;
-
-use gio::prelude::*;
 use gtk::prelude::*;
 use gtk::DrawingArea;
 
@@ -46,14 +43,13 @@ fn main() {
     let application = gtk::Application::new(
         Some("io.github.plotters-rs.plotters-gtk-test"),
         Default::default(),
-    )
-    .expect("Initialization failed...");
+    );
 
     application.connect_activate(|app| {
         build_ui(app);
     });
 
-    application.run(&args().collect::<Vec<_>>());
+    application.run();
 }
 
 pub fn drawable<F>(application: &gtk::Application, width: i32, height: i32, draw_fn: F)
