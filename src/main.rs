@@ -1,42 +1,138 @@
-use gtk::prelude::*;
-use gtk::DrawingArea;
+use std::cell::RefCell;
+use std::cell::RefMut;
+use std::error::Error;
+use std::rc::Rc;
 
-use cairo::Context;
+use gtk::prelude::*;
 use plotters::prelude::*;
 use plotters_cairo::CairoBackend;
 
-fn build_ui(app: &gtk::Application) {
-    drawable(app, 500, 500, |_, cr| {
-        let root = CairoBackend::new(cr, (500, 500)).unwrap().into_drawing_area();
+const GLADE_UI_SOURCE : &'static str = include_str!("ui.glade");
 
-        root.fill(&WHITE).unwrap();
-        let root = root.margin(25, 25, 25, 25);
+#[derive(Clone, Copy)]
+struct PlottingState {
+    mean_x: f64,
+    mean_y: f64,
+    std_x: f64,
+    std_y: f64,
+    pitch: f64,
+    roll: f64,
+}
 
+impl PlottingState {
+    fn guassian_pdf(&self, x: f64, y: f64) -> f64 {
+        let x_diff = (x - self.mean_x) / self.std_x;
+        let y_diff = (y - self.mean_y) / self.std_y;
+        let exponent = -(x_diff * x_diff + y_diff * y_diff) / 2.0;
+        let denom = (2.0 * std::f64::consts::PI / self.std_x / self.std_y).sqrt();
+        let gaussian_pdf = 1.0 / denom;
+        gaussian_pdf * exponent.exp()
+    }
+    fn plot_pdf<'a, DB:DrawingBackend + 'a>(&self, backend: DB) -> Result<(), Box<dyn Error + 'a>> {
+        let root = backend.into_drawing_area();
+
+        root.fill(&WHITE)?;
 
         let mut chart = ChartBuilder::on(&root)
-            .caption("This is a test", ("sans-serif", 20))
-            .build_cartesian_3d(0.0..100.0, 0.0..100.0, 0.0..100.0)
-            .unwrap();
+            .build_cartesian_3d(-10.0f64..10.0, 0.0f64..1.2, -10.0f64..10.0)?;
 
-        chart.with_projection(|mut p| { 
-            p.scale = 0.9;
-            p.into_matrix()
+        chart.with_projection(|mut p| {
+            p.pitch = self.pitch;
+            p.yaw = self.roll;
+            p.scale = 0.7;
+            p.into_matrix() // build the projection matrix
         });
-        
-        chart.configure_axes()
-            .draw()
-            .unwrap();
 
+        chart
+            .configure_axes()
+            .light_grid_style(BLACK.mix(0.15))
+            .max_light_lines(3)
+            .draw()?;
+        let self_cloned = self.clone();
         chart.draw_series(
             SurfaceSeries::xoz(
-                (0..100).map(|n| n as f64),
-                (0..100).map(|n| n as f64),
-                |x,z| ((x - z) / 10.0).sin() * 20.0 + 50.0,
+                (-50..=50).map(|x| x as f64 / 5.0),
+                (-50..=50).map(|x| x as f64 / 5.0),
+                move |x,y| self_cloned.guassian_pdf(x,y),
             )
-        ).unwrap();
+            .style_func(&|&v| {
+                (&HSLColor(240.0 / 360.0 - 240.0 / 360.0 * v, 1.0, 0.7)).into()
+            }),
+        )?;
 
+        root.present()?;
+        Ok(())
+    }
+}
+
+fn build_ui(app: &gtk::Application) {
+    let builder = gtk::Builder::from_string(GLADE_UI_SOURCE);
+    let window = builder.object::<gtk::Window>("MainWindow").unwrap();
+
+    window.set_title("Gaussian PDF Plotter");
+
+    let drawing_area : gtk::DrawingArea = builder.object("MainDrawingArea").unwrap();
+    let pitch = builder.object::<gtk::Adjustment>("Pitch").unwrap();
+    let yaw = builder.object::<gtk::Adjustment>("Yaw").unwrap();
+    let mean_x = builder.object::<gtk::Adjustment>("MeanX").unwrap();
+    let mean_y = builder.object::<gtk::Adjustment>("MeanY").unwrap();
+    let std_x = builder.object::<gtk::Adjustment>("SDX").unwrap();
+    let std_y = builder.object::<gtk::Adjustment>("SDY").unwrap();
+
+    let pitch_scale = builder.object::<gtk::Scale>("PitchScale").unwrap();
+    let yaw_scale = builder.object::<gtk::Scale>("YawScale").unwrap();
+    let mean_x_scale = builder.object::<gtk::Scale>("MeanXScale").unwrap();
+    let mean_y_scale = builder.object::<gtk::Scale>("MeanYScale").unwrap();
+    let std_x_scale = builder.object::<gtk::Scale>("SDXScale").unwrap();
+    let std_y_scale = builder.object::<gtk::Scale>("SDYScale").unwrap();
+
+    let app_state = Rc::new(RefCell::new(PlottingState {
+        mean_x: mean_x.value(),
+        mean_y: mean_y.value(),
+        std_x: std_x.value(),
+        std_y: std_y.value(),
+        pitch: pitch.value(),
+        roll: yaw.value(),
+    }));
+
+    window.set_application(Some(app));
+
+    let state_cloned = app_state.clone();
+    drawing_area.connect_draw(move |widget, cr| {
+        let state = state_cloned.borrow().clone();
+        let w = widget.allocated_width();
+        let h = widget.allocated_height();
+        let backend = CairoBackend::new(cr, (w as u32, h as u32)).unwrap();
+        state.plot_pdf(backend).unwrap();
         Inhibit(false)
-    })
+    });
+
+    fn _register_event_handler(
+        what: &gtk::Scale, 
+        app_state: &Rc<RefCell<PlottingState>>, 
+        drawing_area: &gtk::DrawingArea, 
+        how: impl Fn(RefMut<PlottingState>, f64) + 'static
+    ) {
+        let app_state = app_state.clone();
+        let drawing_area = drawing_area.clone();
+        println!("registering event handler for");
+        what.connect_value_changed(move |target|{
+            let state = app_state.borrow_mut();    
+            how(state, target.value());
+            drawing_area.queue_draw();
+        });
+    }
+
+    _register_event_handler(&pitch_scale, &app_state, &drawing_area, |mut state, value| state.pitch = value);
+    _register_event_handler(&yaw_scale, &app_state, &drawing_area, |mut state, value| state.roll = value);
+    _register_event_handler(&mean_x_scale, &app_state, &drawing_area, |mut state, value| state.mean_x = value);
+    _register_event_handler(&mean_y_scale, &app_state, &drawing_area, |mut state, value| state.mean_y = value);
+    _register_event_handler(&std_x_scale, &app_state, &drawing_area, |mut state, value| state.std_x = value);
+    _register_event_handler(&std_y_scale, &app_state, &drawing_area, |mut state, value| state.std_y = value);
+
+
+    window.show_all();
+
 }
 
 fn main() {
@@ -50,19 +146,4 @@ fn main() {
     });
 
     application.run();
-}
-
-pub fn drawable<F>(application: &gtk::Application, width: i32, height: i32, draw_fn: F)
-where
-    F: Fn(&DrawingArea, &Context) -> Inhibit + 'static,
-{
-    let window = gtk::ApplicationWindow::new(application);
-    let drawing_area = Box::new(DrawingArea::new)();
-
-    drawing_area.connect_draw(draw_fn);
-
-    window.set_default_size(width, height);
-
-    window.add(&drawing_area);
-    window.show_all();
 }
