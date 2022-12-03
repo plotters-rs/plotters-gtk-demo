@@ -6,7 +6,7 @@ use gtk::prelude::*;
 use plotters::prelude::*;
 use plotters_cairo::CairoBackend;
 
-const UI_SOURCE: &'static str = include_str!("ui.xml");
+const UI_SOURCE: &str = include_str!("ui.xml");
 
 #[derive(Clone, Copy)]
 struct PlottingState {
@@ -109,7 +109,7 @@ fn build_ui(app: &gtk::Application) {
             let drawing_area = drawing_area.clone();
             what.connect_value_changed(move |target| {
                 let mut state = app_state.borrow_mut();
-                *how(&mut *state) = target.value();
+                *how(&mut state) = target.value();
                 drawing_area.queue_draw();
             });
         };
