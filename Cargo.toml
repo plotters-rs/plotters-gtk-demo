@@ -7,9 +7,7 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-cairo-rs = "0.16"
 gtk = { package = "gtk4", version = "0.5" }
-gio = "0.16"
 
 [dependencies.plotters]
 git = "https://github.com/plotters-rs/plotters"

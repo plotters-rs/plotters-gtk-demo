@@ -537,8 +537,6 @@ dependencies = [
 name = "plotters-gtk-demo"
 version = "0.1.0"
 dependencies = [
- "cairo-rs",
- "gio",
  "gtk4",
  "plotters",
  "plotters-cairo",
