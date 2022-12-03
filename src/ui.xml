@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.38.2 -->
 <interface>
-  <requires lib="gtk+" version="3.24"/>
+  <requires lib="gtk" version="4.0"/>
   <object class="GtkAdjustment" id="MeanX">
     <property name="lower">-10</property>
     <property name="upper">10</property>
@@ -47,195 +46,167 @@
   </object>
   <object class="GtkAdjustment" id="Yaw">
     <property name="upper">3.14</property>
-    <property name="value">0.72999999999999998</property>
+    <property name="value">0.73</property>
     <property name="step-increment">0.01</property>
     <property name="page-increment">10</property>
   </object>
-  <object class="GtkWindow" id="MainWindow">
-    <property name="can-focus">False</property>
-    <child>
+  <object class="GtkApplicationWindow" id="MainWindow">
+    <property name="title">Gaussian PDF Plotter</property>
+    <property name="child">
       <object class="GtkBox">
-        <property name="visible">True</property>
-        <property name="can-focus">False</property>
         <property name="orientation">vertical</property>
         <child>
-          <!-- n-columns=4 n-rows=3 -->
           <object class="GtkGrid">
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="column-homogeneous">True</property>
+            <property name="column-homogeneous">1</property>
             <child>
               <object class="GtkLabel">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="label" translatable="yes">Mean X </property>
+                <property name="label" translatable="1">Mean X </property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">0</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left-attach">0</property>
-                <property name="top-attach">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="label" translatable="yes">Mean Y</property>
+                <property name="label" translatable="1">Mean Y</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">1</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left-attach">0</property>
-                <property name="top-attach">1</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="label" translatable="yes">SD X</property>
+                <property name="label" translatable="1">SD X</property>
+                <layout>
+                  <property name="column">2</property>
+                  <property name="row">0</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left-attach">2</property>
-                <property name="top-attach">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="label" translatable="yes">SD Y</property>
+                <property name="label" translatable="1">SD Y</property>
+                <layout>
+                  <property name="column">2</property>
+                  <property name="row">1</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left-attach">2</property>
-                <property name="top-attach">1</property>
-              </packing>
             </child>
             <child>
               <object class="GtkScale" id="MeanXScale">
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
+                <property name="draw-value">1</property>
+                <property name="focusable">1</property>
                 <property name="adjustment">MeanX</property>
                 <property name="round-digits">1</property>
                 <property name="digits">4</property>
                 <property name="value-pos">left</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">0</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left-attach">1</property>
-                <property name="top-attach">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkScale" id="MeanYScale">
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
+                <property name="draw-value">1</property>
+                <property name="focusable">1</property>
                 <property name="adjustment">MeanY</property>
                 <property name="round-digits">1</property>
                 <property name="digits">4</property>
                 <property name="value-pos">left</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">1</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left-attach">1</property>
-                <property name="top-attach">1</property>
-              </packing>
             </child>
             <child>
               <object class="GtkScale" id="SDXScale">
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
+                <property name="draw-value">1</property>
+                <property name="focusable">1</property>
                 <property name="adjustment">SDX</property>
                 <property name="round-digits">1</property>
                 <property name="digits">4</property>
                 <property name="value-pos">left</property>
+                <layout>
+                  <property name="column">3</property>
+                  <property name="row">0</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left-attach">3</property>
-                <property name="top-attach">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkScale" id="SDYScale">
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
+                <property name="draw-value">1</property>
+                <property name="focusable">1</property>
                 <property name="adjustment">SDY</property>
                 <property name="round-digits">1</property>
                 <property name="digits">4</property>
                 <property name="value-pos">left</property>
+                <layout>
+                  <property name="column">3</property>
+                  <property name="row">1</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left-attach">3</property>
-                <property name="top-attach">1</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="label" translatable="yes">Pitch</property>
+                <property name="label" translatable="1">Pitch</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">2</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left-attach">0</property>
-                <property name="top-attach">2</property>
-              </packing>
             </child>
             <child>
               <object class="GtkLabel">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="label" translatable="yes">Roll</property>
-                <property name="use-underline">True</property>
+                <property name="label" translatable="1">Roll</property>
+                <property name="use-underline">1</property>
+                <layout>
+                  <property name="column">2</property>
+                  <property name="row">2</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left-attach">2</property>
-                <property name="top-attach">2</property>
-              </packing>
             </child>
             <child>
               <object class="GtkScale" id="PitchScale">
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
+                <property name="draw-value">1</property>
+                <property name="focusable">1</property>
                 <property name="adjustment">Pitch</property>
                 <property name="round-digits">1</property>
                 <property name="digits">4</property>
                 <property name="value-pos">left</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">2</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left-attach">1</property>
-                <property name="top-attach">2</property>
-              </packing>
             </child>
             <child>
               <object class="GtkScale" id="YawScale">
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
+                <property name="draw-value">1</property>
+                <property name="focusable">1</property>
                 <property name="adjustment">Yaw</property>
                 <property name="round-digits">1</property>
                 <property name="digits">4</property>
                 <property name="value-pos">left</property>
+                <layout>
+                  <property name="column">3</property>
+                  <property name="row">2</property>
+                </layout>
               </object>
-              <packing>
-                <property name="left-attach">3</property>
-                <property name="top-attach">2</property>
-              </packing>
             </child>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkDrawingArea" id="MainDrawingArea">
+            <property name="vexpand">1</property>
             <property name="width-request">600</property>
             <property name="height-request">600</property>
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
           </object>
-          <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
-    </child>
+    </property>
   </object>
 </interface>

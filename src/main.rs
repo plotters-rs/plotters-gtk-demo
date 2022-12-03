@@ -6,7 +6,7 @@ use gtk::prelude::*;
 use plotters::prelude::*;
 use plotters_cairo::CairoBackend;
 
-const GLADE_UI_SOURCE: &'static str = include_str!("ui.glade");
+const UI_SOURCE: &'static str = include_str!("ui.xml");
 
 #[derive(Clone, Copy)]
 struct PlottingState {
@@ -69,10 +69,11 @@ impl PlottingState {
 }
 
 fn build_ui(app: &gtk::Application) {
-    let builder = gtk::Builder::from_string(GLADE_UI_SOURCE);
-    let window = builder.object::<gtk::Window>("MainWindow").unwrap();
-
-    window.set_title("Gaussian PDF Plotter");
+    let builder = gtk::Builder::from_string(UI_SOURCE);
+    let window = builder
+        .object::<gtk::ApplicationWindow>("MainWindow")
+        .unwrap();
+    window.set_application(Some(app));
 
     let drawing_area = builder
         .object::<gtk::DrawingArea>("MainDrawingArea")
@@ -96,13 +97,10 @@ fn build_ui(app: &gtk::Application) {
     window.set_application(Some(app));
 
     let state_cloned = app_state.clone();
-    drawing_area.connect_draw(move |widget, cr| {
+    drawing_area.set_draw_func(move |_widget, cr, w, h| {
         let state = state_cloned.borrow().clone();
-        let w = widget.allocated_width();
-        let h = widget.allocated_height();
         let backend = CairoBackend::new(cr, (w as u32, h as u32)).unwrap();
         state.plot_pdf(backend).unwrap();
-        Inhibit(false)
     });
 
     let handle_change =
@@ -123,7 +121,7 @@ fn build_ui(app: &gtk::Application) {
     handle_change(&std_x_scale, Box::new(|s| &mut s.std_x));
     handle_change(&std_y_scale, Box::new(|s| &mut s.std_y));
 
-    window.show_all();
+    window.show();
 }
 
 fn main() {
