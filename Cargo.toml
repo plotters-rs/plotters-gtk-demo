@@ -7,9 +7,9 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-cairo-rs = "0.15.11"
-gtk = "0.15.5"
-gio = "0.15.11"
+cairo-rs = "0.16"
+gtk = "0.16"
+gio = "0.16"
 
 [dependencies.plotters]
 git = "https://github.com/plotters-rs/plotters"
@@ -17,4 +17,5 @@ default_features = false
 features = ["surface_series"]
 
 [dependencies.plotters-cairo]
-git = "https://github.com/plotters-rs/plotters-cairo"
+git = "https://github.com/sdroege/plotters-cairo"
+branch = "cairo-rs-0.16"

@@ -74,7 +74,9 @@ fn build_ui(app: &gtk::Application) {
 
     window.set_title("Gaussian PDF Plotter");
 
-    let drawing_area: gtk::DrawingArea = builder.object("MainDrawingArea").unwrap();
+    let drawing_area = builder
+        .object::<gtk::DrawingArea>("MainDrawingArea")
+        .unwrap();
     let pitch_scale = builder.object::<gtk::Scale>("PitchScale").unwrap();
     let yaw_scale = builder.object::<gtk::Scale>("YawScale").unwrap();
     let mean_x_scale = builder.object::<gtk::Scale>("MeanXScale").unwrap();
