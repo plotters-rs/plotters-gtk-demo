@@ -27,6 +27,7 @@ impl PlottingState {
         let gaussian_pdf = 1.0 / denom;
         gaussian_pdf * exponent.exp()
     }
+
     fn plot_pdf<'a, DB: DrawingBackend + 'a>(
         &self,
         backend: DB,
@@ -53,12 +54,11 @@ impl PlottingState {
             .light_grid_style(BLACK.mix(0.15))
             .max_light_lines(3)
             .draw()?;
-        let self_cloned = self.clone();
         chart.draw_series(
             SurfaceSeries::xoz(
                 (-50..=50).map(|x| x as f64 / 5.0),
                 (-50..=50).map(|x| x as f64 / 5.0),
-                move |x, y| self_cloned.guassian_pdf(x, y),
+                |x, y| self.guassian_pdf(x, y),
             )
             .style_func(&|&v| (&HSLColor(240.0 / 360.0 - 240.0 / 360.0 * v, 1.0, 0.7)).into()),
         )?;
@@ -98,7 +98,7 @@ fn build_ui(app: &gtk::Application) {
 
     let state_cloned = app_state.clone();
     drawing_area.set_draw_func(move |_widget, cr, w, h| {
-        let state = state_cloned.borrow().clone();
+        let state = state_cloned.borrow();
         let backend = CairoBackend::new(cr, (w as u32, h as u32)).unwrap();
         state.plot_pdf(backend).unwrap();
     });
