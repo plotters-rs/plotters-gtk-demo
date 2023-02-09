@@ -16,5 +16,4 @@ default_features = false
 features = ["surface_series"]
 
 [dependencies.plotters-cairo]
-git = "https://github.com/sdroege/plotters-cairo"
-branch = "cairo-rs-0.16"
+git = "https://github.com/plotters-rs/plotters-cairo"

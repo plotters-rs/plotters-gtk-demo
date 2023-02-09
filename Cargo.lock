@@ -560,7 +560,7 @@ source = "git+https://github.com/plotters-rs/plotters#acf5158c6f49b8bfe8a5431c64
 [[package]]
 name = "plotters-cairo"
 version = "0.3.3"
-source = "git+https://github.com/sdroege/plotters-cairo?branch=cairo-rs-0.16#63ff0daf3c3d791dc6b3f6e88901aaf26979ffab"
+source = "git+https://github.com/plotters-rs/plotters-cairo#515ab36f59ff28f1c0db7d98b410d51a7bbf9677"
 dependencies = [
  "cairo-rs",
  "plotters-backend",
