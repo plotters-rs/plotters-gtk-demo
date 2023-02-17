@@ -3,21 +3,27 @@ use gtk::prelude::*;
 use gtk::subclass::prelude::*;
 
 use std::cell::Cell;
+use std::convert::TryFrom;
 use std::error::Error;
 use std::f64;
 
 use plotters::prelude::*;
 use plotters_cairo::CairoBackend;
 
-use once_cell::sync::Lazy;
-
-#[derive(Debug, Default)]
+#[derive(Debug, Default, glib::Properties)]
+#[properties(wrapper_type = super::GaussianPlot)]
 pub struct GaussianPlot {
+    #[property(get, set, minimum = -f64::consts::PI, maximum = f64::consts::PI)]
     pitch: Cell<f64>,
+    #[property(get, set, minimum = 0.0, maximum = f64::consts::PI)]
     yaw: Cell<f64>,
+    #[property(get, set, minimum = -10.0, maximum = 10.0)]
     mean_x: Cell<f64>,
+    #[property(get, set, minimum = -10.0, maximum = 10.0)]
     mean_y: Cell<f64>,
+    #[property(get, set, minimum = 0.0, maximum = 10.0)]
     std_x: Cell<f64>,
+    #[property(get, set, minimum = 0.0, maximum = 10.0)]
     std_y: Cell<f64>,
 }
 
@@ -30,72 +36,16 @@ impl ObjectSubclass for GaussianPlot {
 
 impl ObjectImpl for GaussianPlot {
     fn properties() -> &'static [glib::ParamSpec] {
-        static PROPERTIES: Lazy<Vec<glib::ParamSpec>> = Lazy::new(|| {
-            vec![
-                glib::ParamSpecDouble::builder("pitch")
-                    .minimum(-f64::consts::PI)
-                    .maximum(f64::consts::PI)
-                    .build(),
-                glib::ParamSpecDouble::builder("yaw")
-                    .minimum(0.0)
-                    .maximum(f64::consts::PI)
-                    .build(),
-                glib::ParamSpecDouble::builder("mean-x")
-                    .minimum(-10.0)
-                    .maximum(10.0)
-                    .build(),
-                glib::ParamSpecDouble::builder("mean-y")
-                    .minimum(-10.0)
-                    .maximum(10.0)
-                    .build(),
-                glib::ParamSpecDouble::builder("std-x")
-                    .minimum(0.0)
-                    .maximum(10.0)
-                    .build(),
-                glib::ParamSpecDouble::builder("std-y")
-                    .minimum(0.0)
-                    .maximum(10.0)
-                    .build(),
-            ]
-        });
-        PROPERTIES.as_ref()
+        Self::derived_properties()
     }
 
-    fn set_property(&self, _id: usize, value: &glib::Value, pspec: &glib::ParamSpec) {
-        match pspec.name() {
-            "pitch" => {
-                self.pitch.set(value.get().unwrap());
-            }
-            "yaw" => {
-                self.yaw.set(value.get().unwrap());
-            }
-            "mean-x" => {
-                self.mean_x.set(value.get().unwrap());
-            }
-            "mean-y" => {
-                self.mean_y.set(value.get().unwrap());
-            }
-            "std-x" => {
-                self.std_x.set(value.get().unwrap());
-            }
-            "std-y" => {
-                self.std_y.set(value.get().unwrap());
-            }
-            _ => unimplemented!(),
-        }
+    fn set_property(&self, id: usize, value: &glib::Value, pspec: &glib::ParamSpec) {
+        Self::derived_set_property(self, id, value, pspec);
         self.obj().queue_draw();
     }
 
-    fn property(&self, _id: usize, pspec: &glib::ParamSpec) -> glib::Value {
-        match pspec.name() {
-            "pitch" => self.pitch.get().to_value(),
-            "yaw" => self.yaw.get().to_value(),
-            "mean-x" => self.mean_x.get().to_value(),
-            "mean-y" => self.mean_y.get().to_value(),
-            "std-x" => self.std_x.get().to_value(),
-            "std-y" => self.std_y.get().to_value(),
-            _ => unimplemented!(),
-        }
+    fn property(&self, id: usize, pspec: &glib::ParamSpec) -> glib::Value {
+        Self::derived_property(self, id, pspec)
     }
 }
 
