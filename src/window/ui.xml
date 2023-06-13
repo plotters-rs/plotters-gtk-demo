@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <object class="GtkAdjustment" id="mean_x">
+    <property name="lower">-10</property>
+    <property name="upper">10</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">10</property>
+  </object>
+  <object class="GtkAdjustment" id="mean_y">
+    <property name="lower">-10</property>
+    <property name="upper">10</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">10</property>
+  </object>
+  <object class="GtkAdjustment" id="pitch">
+    <property name="lower">-3.14</property>
+    <property name="upper">3.14</property>
+    <property name="value">0.5</property>
+    <property name="step-increment">0.01</property>
+    <property name="page-increment">10</property>
+  </object>
+  <object class="GtkAdjustment" id="sdx">
+    <property name="upper">10</property>
+    <property name="value">2</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">10</property>
+  </object>
+  <object class="GtkAdjustment" id="sdy">
+    <property name="upper">10</property>
+    <property name="value">5</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">10</property>
+  </object>
+  <object class="GtkAdjustment" id="yaw">
+    <property name="upper">3.14</property>
+    <property name="value">0.73</property>
+    <property name="step-increment">0.01</property>
+    <property name="page-increment">10</property>
+  </object>
+  <template class="Window" parent="GtkApplicationWindow">
+    <property name="title">Gaussian PDF Plotter</property>
+    <property name="default-width">600</property>
+    <property name="default-height">800</property>
+    <property name="child">
+      <object class="GtkBox">
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkGrid">
+            <property name="column-homogeneous">True</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="1">Mean X </property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">0</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="1">Mean Y</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">1</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="1">SD X</property>
+                <layout>
+                  <property name="column">2</property>
+                  <property name="row">0</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="1">SD Y</property>
+                <layout>
+                  <property name="column">2</property>
+                  <property name="row">1</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkScale" id="mean_x_scale">
+                <property name="draw-value">True</property>
+                <property name="adjustment">mean_x</property>
+                <property name="round-digits">1</property>
+                <property name="digits">4</property>
+                <property name="value-pos">left</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">0</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkScale" id="mean_y_scale">
+                <property name="draw-value">True</property>
+                <property name="adjustment">mean_y</property>
+                <property name="round-digits">1</property>
+                <property name="digits">4</property>
+                <property name="value-pos">left</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">1</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkScale" id="sdx_scale">
+                <property name="draw-value">True</property>
+                <property name="adjustment">sdx</property>
+                <property name="round-digits">1</property>
+                <property name="digits">4</property>
+                <property name="value-pos">left</property>
+                <layout>
+                  <property name="column">3</property>
+                  <property name="row">0</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkScale" id="sdy_scale">
+                <property name="draw-value">True</property>
+                <property name="adjustment">sdy</property>
+                <property name="round-digits">1</property>
+                <property name="digits">4</property>
+                <property name="value-pos">left</property>
+                <layout>
+                  <property name="column">3</property>
+                  <property name="row">1</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="1">Pitch</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="row">2</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="label" translatable="1">Roll</property>
+                <property name="use-underline">1</property>
+                <layout>
+                  <property name="column">2</property>
+                  <property name="row">2</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkScale" id="pitch_scale">
+                <property name="draw-value">True</property>
+                <property name="adjustment">pitch</property>
+                <property name="round-digits">1</property>
+                <property name="digits">4</property>
+                <property name="value-pos">left</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="row">2</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="GtkScale" id="yaw_scale">
+                <property name="draw-value">True</property>
+                <property name="adjustment">yaw</property>
+                <property name="round-digits">1</property>
+                <property name="digits">4</property>
+                <property name="value-pos">left</property>
+                <layout>
+                  <property name="column">3</property>
+                  <property name="row">2</property>
+                </layout>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GaussianPlot" id="plot">
+            <property name="vexpand">True</property>
+            <property name="pitch" bind-source="pitch" bind-property="value" bind-flags="sync-create" />
+            <property name="yaw" bind-source="yaw" bind-property="value" bind-flags="sync-create" />
+            <property name="mean-x" bind-source="mean_x" bind-property="value" bind-flags="sync-create" />
+            <property name="mean-y" bind-source="mean_y" bind-property="value" bind-flags="sync-create" />
+            <property name="std-x" bind-source="sdx" bind-property="value" bind-flags="sync-create" />
+            <property name="std-y" bind-source="sdy" bind-property="value" bind-flags="sync-create" />
+          </object>
+        </child>
+      </object>
+    </property>
+  </template>
+</interface>
