@@ -3,7 +3,6 @@ use gtk::prelude::*;
 use gtk::subclass::prelude::*;
 
 use std::cell::Cell;
-use std::convert::TryFrom;
 use std::error::Error;
 use std::f64;
 
