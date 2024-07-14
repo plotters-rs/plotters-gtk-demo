@@ -15,4 +15,4 @@ default_features = false
 features = ["surface_series"]
 
 [dependencies.plotters-cairo]
-version = "0.6.0"
+version = "0.7.0"
