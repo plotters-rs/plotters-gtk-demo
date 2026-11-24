@@ -11,7 +11,7 @@ fn main() {
 
     application.connect_activate(|app| {
         let win = window::Window::new(app);
-        win.show();
+        win.present();
     });
 
     application.run();
