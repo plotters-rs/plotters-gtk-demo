@@ -7,7 +7,7 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-gtk = { package = "gtk4", version = "0.9" }
+gtk = { package = "gtk4", version = "0.11", features=["v4_12"] }
 
 [dependencies.plotters]
 version = "0.3.6"
